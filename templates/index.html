@@ -1,0 +1,2508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>MULTI BOT HOSTING</title>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+
+    background:
+        radial-gradient(
+            circle at 10% 0%,
+            rgba(88,101,242,.30),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 15%,
+            rgba(170,70,230,.22),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(70,100,255,.12),
+            transparent 32%
+        ),
+        #0b1f3a;
+
+    color:#fff;
+    font-family:Arial,sans-serif;
+}
+
+.container{
+    width:100%;
+    max-width:1000px;
+    margin:auto;
+    padding:18px;
+}
+
+
+/* =====================================
+   HEADER
+===================================== */
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:16px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.brand-icon{
+    width:48px;
+    height:48px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:15px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6673ff,
+            #a05cff
+        );
+
+    font-size:23px;
+
+    box-shadow:
+        0 7px 30px
+        rgba(88,101,242,.48),
+        0 0 18px
+        rgba(145,90,255,.25);
+}
+
+.header h2{
+    margin:0;
+    font-size:21px;
+}
+
+.header p{
+    margin:4px 0 0;
+    color:#9aa8c4;
+    font-size:11px;
+}
+
+.logout{
+    padding:10px 15px;
+
+    border:1px solid #46577d;
+    border-radius:10px;
+
+    background:#202d4a;
+    color:#fff;
+
+    font-weight:bold;
+
+    box-shadow:
+        0 5px 18px
+        rgba(55,75,130,.22);
+}
+
+
+/* =====================================
+   PREMIUM STATS
+===================================== */
+
+.stats{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:12px;
+
+    margin-bottom:18px;
+}
+
+.stat-card{
+
+    position:relative;
+    overflow:hidden;
+
+    display:flex;
+    align-items:center;
+
+    gap:12px;
+
+    padding:15px;
+
+    border-radius:17px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(27,39,66,.99),
+            rgba(12,19,35,.99)
+        );
+
+    border:1px solid #3a4b70;
+
+    box-shadow:
+        0 10px 30px
+        rgba(0,0,0,.28),
+        inset 0 1px 0
+        rgba(255,255,255,.035);
+
+    transition:
+        transform .2s ease,
+        border-color .2s ease;
+}
+
+.stat-card:hover{
+
+    transform:translateY(-2px);
+
+    border-color:#596e9e;
+}
+
+.stat-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:100px;
+    height:100px;
+
+    right:-45px;
+    top:-45px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.055);
+}
+
+.stat-icon{
+
+    position:relative;
+    z-index:1;
+
+    width:45px;
+    height:45px;
+
+    flex-shrink:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:13px;
+
+    font-size:19px;
+
+    background:#202d4a;
+
+    border:1px solid #405274;
+
+}
+
+.total .stat-icon{
+
+    box-shadow:
+        0 0 22px
+        rgba(98,112,255,.35);
+}
+
+.running-stat .stat-icon{
+
+    box-shadow:
+        0 0 22px
+        rgba(99,255,156,.27);
+}
+
+.stopped-stat .stat-icon{
+
+    box-shadow:
+        0 0 22px
+        rgba(255,190,90,.25);
+}
+
+.stat-info{
+
+    position:relative;
+    z-index:1;
+}
+
+.stat-label{
+
+    color:#9ba9c3;
+
+    font-size:9px;
+
+    font-weight:bold;
+
+    letter-spacing:.8px;
+}
+
+.stat-number{
+
+    margin-top:3px;
+
+    font-size:23px;
+
+    font-weight:bold;
+}
+
+.total .stat-number{
+    color:#b4bcff;
+
+    text-shadow:
+        0 0 12px
+        rgba(120,130,255,.25);
+}
+
+.running-stat .stat-number{
+    color:#70ffac;
+
+    text-shadow:
+        0 0 12px
+        rgba(99,255,156,.28);
+}
+
+.stopped-stat .stat-number{
+    color:#ffd277;
+
+    text-shadow:
+        0 0 12px
+        rgba(255,190,90,.25);
+}
+
+
+/* =====================================
+   BUTTON SYSTEM
+===================================== */
+
+button{
+
+    position:relative;
+
+    cursor:pointer;
+
+    -webkit-tap-highlight-color:transparent;
+
+    transition:
+        filter .12s ease,
+        transform .12s ease;
+}
+
+button:hover{
+
+    filter:brightness(1.12);
+
+}
+
+button:active{
+
+    transform:scale(.97);
+
+    filter:brightness(1.02);
+
+}
+
+
+/* =====================================
+   CARD
+===================================== */
+
+.card{
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(24,36,61,.98),
+            rgba(12,19,34,.98)
+        );
+
+    border:1px solid #354667;
+
+    border-radius:18px;
+
+    padding:18px;
+
+    margin-bottom:15px;
+
+    box-shadow:
+        0 12px 35px
+        rgba(0,0,0,.24),
+        inset 0 1px 0
+        rgba(255,255,255,.025);
+}
+
+
+/* =====================================
+   UPLOAD
+===================================== */
+
+.upload-box h3{
+    margin:0 0 15px;
+}
+
+.file-input{
+
+    width:100%;
+
+    padding:11px;
+
+    background:#090f1e;
+
+    color:#e8ecf7;
+
+    border:1px dashed #4a5e86;
+
+    border-radius:11px;
+
+    margin-bottom:10px;
+}
+
+.upload{
+
+    width:100%;
+
+    padding:13px;
+
+    border:0;
+
+    border-radius:11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6673ff,
+            #875cff
+        );
+
+    color:#fff;
+
+    font-weight:bold;
+
+    box-shadow:none;
+}
+
+.upload:hover{
+
+    filter:brightness(1.12);
+
+    box-shadow:none;
+}
+
+
+/* =====================================
+   BOT HEADER
+===================================== */
+
+.bot-head{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:10px;
+}
+
+.bot-title h3{
+
+    margin:0 0 5px;
+
+    font-size:17px;
+}
+
+.bot-id{
+
+    color:#8c9bb8;
+
+    font-size:11px;
+
+    font-family:monospace;
+}
+
+
+/* =====================================
+   STATUS
+===================================== */
+
+.status{
+
+    padding:7px 11px;
+
+    border-radius:20px;
+
+    font-size:10px;
+
+    font-weight:bold;
+
+    white-space:nowrap;
+
+    background:#3b465e;
+
+    color:#d4dbea;
+
+    border:1px solid #4c5a77;
+}
+
+.status.running{
+
+    background:
+        rgba(22,170,91,.22);
+
+    color:#72ffae;
+
+    border:1px solid
+        rgba(108,255,170,.28);
+
+    box-shadow:
+        0 0 17px
+        rgba(108,255,170,.15);
+}
+
+.status.crashed{
+
+    background:
+        rgba(180,45,60,.23);
+
+    color:#ff9ca5;
+
+    border:1px solid
+        rgba(255,146,156,.25);
+
+    box-shadow:
+        0 0 14px
+        rgba(255,80,100,.10);
+}
+
+
+/* =====================================
+   FILE & EDIT SYSTEM
+===================================== */
+
+.file-label{
+
+    display:block;
+
+    margin-top:18px;
+    margin-bottom:7px;
+
+    color:#c1cce0;
+
+    font-size:12px;
+
+    font-weight:bold;
+}
+
+.file-select-group{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+select{
+
+    flex:1;
+
+    padding:11px;
+
+    border-radius:10px;
+
+    border:1px solid #435474;
+
+    background:#090f1e;
+
+    color:#fff;
+
+    outline:none;
+
+    box-shadow:
+        inset 0 0 12px
+        rgba(50,75,130,.08);
+}
+
+select:focus{
+
+    border-color:#6877ff;
+
+    box-shadow:
+        0 0 14px
+        rgba(88,101,242,.20);
+}
+
+.edit-btn-trigger{
+    padding:11px 15px;
+    background:linear-gradient(135deg, #3b82f6, #1d4ed8);
+    border:0;
+    border-radius:10px;
+    color:#fff;
+    font-weight:bold;
+    font-size:12px;
+    white-space:nowrap;
+}
+
+
+/* =====================================
+   POPUP MODAL EDITOR
+===================================== */
+
+.modal-overlay{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0, 0, 0, 0.75);
+    backdrop-filter:blur(4px);
+    z-index:999;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+}
+
+.modal-overlay.active{
+    display:flex;
+}
+
+.modal-content{
+    width:100%;
+    max-width:750px;
+    background:#0c1628;
+    border:1px solid #3b4c73;
+    border-radius:16px;
+    padding:20px;
+    box-shadow:0 10px 40px rgba(0,0,0,0.6);
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+    border-bottom:1px solid #233252;
+    padding-bottom:10px;
+}
+
+.modal-title{
+    font-size:15px;
+    font-weight:bold;
+    color:#73a2ff;
+}
+
+.modal-close{
+    background:transparent;
+    border:0;
+    color:#9ba9c3;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.modal-editor{
+    width:100%;
+    height:320px;
+    background:#040711;
+    color:#00ff88;
+    border:1px solid #2d3d61;
+    border-radius:10px;
+    padding:12px;
+    font-family:"Courier New", monospace;
+    font-size:13px;
+    line-height:1.5;
+    outline:none;
+    resize:vertical;
+}
+
+.modal-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:14px;
+}
+
+.btn-modal-save{
+    padding:10px 18px;
+    background:linear-gradient(135deg, #22c55e, #15803d);
+    border:0;
+    border-radius:10px;
+    color:#fff;
+    font-weight:bold;
+    font-size:13px;
+}
+
+.btn-modal-cancel{
+    padding:10px 18px;
+    background:#2d3a54;
+    border:0;
+    border-radius:10px;
+    color:#d0dbe9;
+    font-weight:bold;
+    font-size:13px;
+}
+
+
+/* =====================================
+   ACTION BUTTONS
+===================================== */
+
+.actions{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:9px;
+
+    margin-top:15px;
+}
+
+.actions button{
+
+    width:100%;
+
+    padding:13px 8px;
+
+    border:0;
+
+    border-radius:12px;
+
+    color:#fff;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    box-shadow:none;
+
+    transition:
+        filter .12s ease,
+        transform .12s ease;
+}
+
+
+/* =====================================
+   START - BRIGHT GREEN
+===================================== */
+
+.start{
+
+    background:
+        linear-gradient(
+            135deg,
+            #27c978,
+            #159957
+        );
+
+    box-shadow:none;
+}
+
+
+/* =====================================
+   RESTART - BRIGHT GOLD
+===================================== */
+
+.restart{
+
+    background:
+        linear-gradient(
+            135deg,
+            #e2b52d,
+            #c58b12
+        );
+
+    box-shadow:none;
+}
+
+
+/* =====================================
+   STOP - BRIGHT RED
+===================================== */
+
+.stop{
+
+    background:
+        linear-gradient(
+            135deg,
+            #ed5757,
+            #c93636
+        );
+
+    box-shadow:none;
+}
+
+
+/* =====================================
+   DELETE - BRIGHT PINK
+===================================== */
+
+.delete{
+
+    background:
+        linear-gradient(
+            135deg,
+            #d94b91,
+            #ae2f70
+        );
+
+    box-shadow:none;
+}
+
+
+.start:hover,
+.restart:hover,
+.stop:hover,
+.delete:hover{
+
+    filter:brightness(1.12);
+
+    box-shadow:none;
+}
+
+
+.start:active,
+.restart:active,
+.stop:active,
+.delete:active,
+.upload:active{
+
+    transform:scale(.97);
+
+    filter:brightness(1.02);
+
+    box-shadow:none;
+}
+
+
+/* =====================================
+   LIVE CONSOLE
+===================================== */
+
+.live-console{
+
+    margin-top:15px;
+
+    background:#05070d;
+
+    border:1px solid #303d5a;
+
+    border-radius:13px;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 0 18px
+        rgba(50,75,130,.08);
+}
+
+.console-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:10px 12px;
+
+    background:#111a2c;
+
+    border-bottom:1px solid #303d5a;
+
+    font-size:12px;
+
+    font-weight:bold;
+}
+
+.console-live{
+
+    color:#8c9bb8;
+
+    font-size:9px;
+
+    transition:
+        color .2s ease,
+        text-shadow .2s ease;
+}
+
+.console-live.active{
+
+    color:#70ffac;
+
+    text-shadow:
+        0 0 12px
+        rgba(99,255,156,.70);
+}
+
+.console{
+
+    margin:0;
+
+    padding:12px;
+
+    height:210px;
+
+    overflow-y:auto;
+
+    white-space:pre-wrap;
+
+    word-break:break-word;
+
+    color:#00ff00;
+
+    background:#05070c;
+
+    font-family:
+        "Courier New",
+        monospace;
+
+    font-size:12px;
+
+    line-height:1.5;
+}
+
+.console::-webkit-scrollbar{
+    width:5px;
+}
+
+.console::-webkit-scrollbar-thumb{
+
+    background:#405070;
+
+    border-radius:10px;
+}
+
+
+/* =====================================
+   EMPTY
+===================================== */
+
+.empty{
+
+    text-align:center;
+
+    padding:35px;
+
+    color:#9aa8c2;
+}
+
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media(max-width:600px){
+
+    .container{
+        padding:12px;
+    }
+
+    .header h2{
+        font-size:18px;
+    }
+
+    .header p{
+        font-size:9px;
+    }
+
+    .brand-icon{
+        width:42px;
+        height:42px;
+        font-size:20px;
+    }
+
+    .logout{
+        padding:9px 11px;
+        font-size:11px;
+    }
+
+    .stats{
+
+        grid-template-columns:
+            repeat(3,1fr);
+
+        gap:7px;
+    }
+
+    .stat-card{
+
+        padding:11px 7px;
+
+        gap:7px;
+
+        border-radius:13px;
+
+        justify-content:center;
+    }
+
+    .stat-icon{
+
+        width:32px;
+        height:32px;
+
+        border-radius:9px;
+
+        font-size:14px;
+    }
+
+    .stat-label{
+
+        font-size:7px;
+
+        letter-spacing:.25px;
+    }
+
+    .stat-number{
+
+        font-size:18px;
+    }
+
+    .card{
+        padding:15px;
+    }
+
+    .actions{
+        gap:8px;
+    }
+
+    .actions button{
+        padding:12px 6px;
+        font-size:12px;
+    }
+
+    .console{
+        height:200px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<!-- =====================================
+     HEADER
+===================================== -->
+
+<div class="header">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🚀
+        </div>
+
+        <div>
+
+            <h2>
+                MULTI BOT HOSTING
+            </h2>
+
+            <p>
+                Premium Bot Management Panel
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <a href="/logout">
+
+        <button
+            class="logout"
+            type="button"
+        >
+             🚪 LOGOUT
+        </button>
+
+    </a>
+
+</div>
+
+
+<!-- =====================================
+     PREMIUM BOT STATISTICS
+===================================== -->
+
+<div class="stats">
+
+    <div class="stat-card total">
+
+        <div class="stat-icon">
+            🤖
+        </div>
+
+        <div class="stat-info">
+
+            <div class="stat-label">
+                TOTAL BOTS
+            </div>
+
+            <div
+                class="stat-number"
+                id="totalBots"
+            >
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card running-stat">
+
+        <div class="stat-icon">
+            🟢
+        </div>
+
+        <div class="stat-info">
+
+            <div class="stat-label">
+                RUNNING
+            </div>
+
+            <div
+                class="stat-number"
+                id="runningBots"
+            >
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card stopped-stat">
+
+        <div class="stat-icon">
+            🔴
+        </div>
+
+        <div class="stat-info">
+
+            <div class="stat-label">
+                STOPPED
+            </div>
+
+            <div
+                class="stat-number"
+                id="stoppedBots"
+            >
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================
+     UPLOAD
+===================================== -->
+
+<div class="card upload-box">
+
+    <h3>
+        📦 Upload Bot
+    </h3>
+
+
+    <form id="uploadForm">
+
+        <input
+            class="file-input"
+            type="file"
+            name="file"
+            accept=".py,.zip"
+            required
+        >
+
+
+        <button
+            class="upload"
+            type="submit"
+        >
+            📤 Upload .py / .zip
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- =====================================
+     BOT LIST
+===================================== -->
+
+<div id="bots"></div>
+
+
+</div>
+
+
+<!-- =====================================
+     POPUP FILE EDITOR MODAL
+===================================== -->
+
+<div
+    class="modal-overlay"
+    id="editorModal"
+>
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <div
+                class="modal-title"
+                id="modalFileName"
+            >
+                📄 Editing File
+            </div>
+
+            <button
+                class="modal-close"
+                onclick="closeEditorModal()"
+            >
+                ✖
+            </button>
+
+        </div>
+
+
+        <textarea
+            class="modal-editor"
+            id="modalFileCode"
+            placeholder="Loading code content..."
+        ></textarea>
+
+
+        <div class="modal-actions">
+
+            <button
+                class="btn-modal-cancel"
+                onclick="closeEditorModal()"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="btn-modal-save"
+                onclick="saveModalCode()"
+            >
+                💾 Save & Replace File
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================
+   DATA
+===================================== */
+
+let bots =
+{{ bots|tojson }};
+
+let currentEditingBotId = null;
+let currentEditingFileName = null;
+
+
+/* =====================================
+   SOCKET
+===================================== */
+
+const socket =
+    io();
+
+
+/* =====================================
+   ESCAPE HTML
+===================================== */
+
+function escapeHTML(text){
+
+    return String(text)
+
+        .replaceAll("&","&amp;")
+
+        .replaceAll("<","&lt;")
+
+        .replaceAll(">","&gt;")
+
+        .replaceAll('"',"&quot;")
+
+        .replaceAll("'","&#039;");
+
+}
+
+
+/* =====================================
+   BOT STATISTICS
+===================================== */
+
+function updateBotStats(){
+
+    const total =
+        bots.length;
+
+    let running = 0;
+
+    let stopped = 0;
+
+
+    bots.forEach(
+        bot => {
+
+            const status =
+                String(
+                    bot.status || ""
+                ).toUpperCase();
+
+
+            if(
+                status === "RUNNING"
+            ){
+
+                running++;
+
+            }
+            else{
+
+                stopped++;
+
+            }
+
+        }
+    );
+
+
+    const totalBox =
+        document.getElementById(
+            "totalBots"
+        );
+
+    const runningBox =
+        document.getElementById(
+            "runningBots"
+        );
+
+    const stoppedBox =
+        document.getElementById(
+            "stoppedBots"
+        );
+
+
+    if(totalBox){
+
+        totalBox.textContent =
+            total;
+
+    }
+
+
+    if(runningBox){
+
+        runningBox.textContent =
+            running;
+
+    }
+
+
+    if(stoppedBox){
+
+        stoppedBox.textContent =
+            stopped;
+
+    }
+
+}
+
+
+/* =====================================
+   RENDER
+===================================== */
+
+function renderBots(){
+
+    const box =
+        document.getElementById(
+            "bots"
+        );
+
+
+    if(!bots.length){
+
+        box.innerHTML = `
+
+            <div class="card empty">
+
+                <div
+                    style="
+                    font-size:34px;
+                    margin-bottom:8px;
+                    "
+                >
+                    🤖
+                </div>
+
+                No bots uploaded yet.
+
+            </div>
+
+        `;
+
+        updateBotStats();
+
+        return;
+
+    }
+
+
+    box.innerHTML =
+        bots.map(
+            bot => `
+
+        <div
+            class="card"
+            id="bot-${bot.id}"
+        >
+
+            <div class="bot-head">
+
+                <div class="bot-title">
+
+                    <h3>
+
+                        🤖
+                        ${escapeHTML(
+                            bot.name
+                        )}
+
+                    </h3>
+
+                    <div class="bot-id">
+
+                        ID:
+                        ${escapeHTML(
+                            bot.id
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <span
+                    id="status-${bot.id}"
+                    class="status ${
+                        bot.status === "RUNNING"
+                        ? "running"
+                        : bot.status === "CRASHED"
+                        ? "crashed"
+                        : ""
+                    }"
+                >
+
+                    ${escapeHTML(
+                        bot.status
+                    )}
+
+                </span>
+
+            </div>
+
+
+            <label class="file-label">
+
+                🐍 Start Python File
+
+            </label>
+
+
+            <div class="file-select-group">
+
+                <select
+                    id="entry-${bot.id}"
+                ></select>
+
+
+                <button
+                    type="button"
+                    class="edit-btn-trigger"
+                    onclick="
+                        openEditorModal(
+                            '${bot.id}'
+                        )
+                    "
+                >
+                    📄 Edit File
+                </button>
+
+            </div>
+
+
+            <div class="actions">
+
+                <button
+                    class="start"
+                    onclick="
+                        botAction(
+                            '${bot.id}',
+                            'start'
+                        )
+                    "
+                >
+                    ▶️ Start
+                </button>
+
+
+                <button
+                    class="restart"
+                    onclick="
+                        botAction(
+                            '${bot.id}',
+                            'restart'
+                        )
+                    "
+                >
+                    🔄 Restart
+                </button>
+
+
+                <button
+                    class="stop"
+                    onclick="
+                        botAction(
+                            '${bot.id}',
+                            'stop'
+                        )
+                    "
+                >
+                    ⏹️ Stop
+                </button>
+
+
+                <button
+                    class="delete"
+                    onclick="
+                        deleteBot(
+                            '${bot.id}'
+                        )
+                    "
+                >
+                    🗑️ Delete
+                </button>
+
+            </div>
+
+
+            <div class="live-console">
+
+                <div class="console-header">
+
+                    <span>
+                        📟 Live Console
+                    </span>
+
+
+                    <span
+                        id="live-${bot.id}"
+                        class="console-live"
+                    >
+                        ● Wait
+                    </span>
+
+                </div>
+
+
+                <pre
+                    class="console"
+                    id="console-${bot.id}"
+                >Console ready...</pre>
+
+            </div>
+
+
+        </div>
+
+        `
+        ).join("");
+
+
+    bots.forEach(
+        bot => {
+
+            loadFiles(
+                bot.id
+            );
+
+            loadConsole(
+                bot.id
+            );
+
+        }
+    );
+
+
+    updateBotStats();
+
+}
+
+
+/* =====================================
+   LOAD FILES
+===================================== */
+
+async function loadFiles(id){
+
+    try{
+
+        const response =
+            await fetch(
+                "/bot/" +
+                id +
+                "/files"
+            );
+
+
+        const files =
+            await response.json();
+
+
+        const select =
+            document.getElementById(
+                "entry-" + id
+            );
+
+
+        if(!select){
+            return;
+        }
+
+
+        select.innerHTML = "";
+
+
+        if(
+            !Array.isArray(files) ||
+            files.length === 0
+        ){
+
+            select.innerHTML =
+                "<option>No Python file</option>";
+
+            return;
+
+        }
+
+
+        files.forEach(
+            file => {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+                option.value =
+                    file;
+
+                option.textContent =
+                    file;
+
+                select.appendChild(
+                    option
+                );
+
+            }
+        );
+
+
+        const bot =
+            bots.find(
+                x =>
+                    x.id === id
+            );
+
+
+        if(
+            bot &&
+            bot.entry
+        ){
+
+            select.value =
+                bot.entry;
+
+        }
+
+
+        select.onchange =
+            function(){
+
+                setEntry(
+                    id,
+                    this.value
+                );
+
+            };
+
+    }
+
+    catch(error){
+
+        console.error(
+            "File loading error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   MODAL EDITOR LOGIC
+===================================== */
+
+async function openEditorModal(botId){
+
+    const select =
+        document.getElementById(
+            "entry-" + botId
+        );
+
+
+    if(
+        !select ||
+        !select.value ||
+        select.value === "No Python file"
+    ){
+
+        alert(
+            "Please select a valid Python file to edit."
+        );
+
+        return;
+
+    }
+
+
+    currentEditingBotId = botId;
+
+    currentEditingFileName = select.value;
+
+
+    const titleBox =
+        document.getElementById(
+            "modalFileName"
+        );
+
+    const codeArea =
+        document.getElementById(
+            "modalFileCode"
+        );
+
+    const modal =
+        document.getElementById(
+            "editorModal"
+        );
+
+
+    if(titleBox){
+
+        titleBox.textContent =
+            "📄 Editing: " +
+            currentEditingFileName;
+
+    }
+
+
+    if(codeArea){
+
+        codeArea.value =
+            "Loading text content...";
+
+    }
+
+
+    if(modal){
+
+        modal.classList.add(
+            "active"
+        );
+
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/bot/" +
+                botId +
+                "/file-content?file=" +
+                encodeURIComponent(
+                    currentEditingFileName
+                )
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(
+            data.ok &&
+            codeArea
+        ){
+
+            codeArea.value =
+                data.content || "";
+
+        }
+        else if(codeArea){
+
+            codeArea.value =
+                "# Failed to load file text.";
+
+        }
+
+    }
+
+    catch(error){
+
+        if(codeArea){
+
+            codeArea.value =
+                "# Server connection error while reading file.";
+
+        }
+
+    }
+
+}
+
+
+function closeEditorModal(){
+
+    const modal =
+        document.getElementById(
+            "editorModal"
+        );
+
+
+    if(modal){
+
+        modal.classList.remove(
+            "active"
+        );
+
+    }
+
+
+    currentEditingBotId = null;
+
+    currentEditingFileName = null;
+
+}
+
+
+async function saveModalCode(){
+
+    if(
+        !currentEditingBotId ||
+        !currentEditingFileName
+    ){
+
+        return;
+
+    }
+
+
+    const codeArea =
+        document.getElementById(
+            "modalFileCode"
+        );
+
+
+    if(!codeArea){
+
+        return;
+
+    }
+
+
+    /* =====================================
+       CONFIRMATION POPUP ALERT
+    ===================================== */
+    const isConfirmed = confirm(
+        `⚠️ Are you sure you want to save and replace changes in "${currentEditingFileName}"?`
+    );
+
+    if(!isConfirmed){
+        return;
+    }
+
+
+    const newContent =
+        codeArea.value;
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/bot/" +
+                currentEditingBotId +
+                "/save-file",
+                {
+
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            filename:
+                                currentEditingFileName,
+                            content:
+                                newContent
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(data.ok){
+
+            alert(
+                "✅ File saved and replaced successfully."
+            );
+
+            closeEditorModal();
+
+        }
+        else{
+
+            alert(
+                data.error ||
+                "Failed to replace file content"
+            );
+
+        }
+
+    }
+
+    catch(error){
+
+        alert(
+            "Server connection failed during save"
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   LOAD CONSOLE
+===================================== */
+
+async function loadConsole(id){
+
+    try{
+
+        const response =
+            await fetch(
+                "/bot/" +
+                id +
+                "/log"
+            );
+
+
+        if(!response.ok){
+            return;
+        }
+
+
+        const data =
+            await response.json();
+
+
+        const box =
+            document.getElementById(
+                "console-" + id
+            );
+
+
+        if(!box){
+            return;
+        }
+
+
+        if(
+            data &&
+            typeof data.log === "string"
+        ){
+
+            box.textContent =
+                data.log ||
+                "Console ready...";
+
+            box.scrollTop =
+                box.scrollHeight;
+
+        }
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Console loading error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   SET ENTRY
+===================================== */
+
+async function setEntry(
+    id,
+    entry
+){
+
+    try{
+
+        const response =
+            await fetch(
+                "/bot/" +
+                id +
+                "/entry",
+                {
+
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            entry:entry
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!data.ok){
+
+            alert(
+                data.error ||
+                "Failed to save start file"
+            );
+
+        }
+
+    }
+
+    catch(error){
+
+        alert(
+            "Server connection failed"
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   BOT ACTION
+===================================== */
+
+async function botAction(
+    id,
+    actionName
+){
+
+    try{
+
+        const response =
+            await fetch(
+                "/bot/" +
+                id +
+                "/" +
+                actionName,
+                {
+                    method:"POST"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!data.ok){
+
+            alert(
+                data.error ||
+                data.message ||
+                "Action failed"
+            );
+
+            return;
+
+        }
+
+
+        if(
+            actionName === "stop"
+        ){
+
+            updateStatus(
+                id,
+                "STOPPED"
+            );
+
+        }
+        else{
+
+            updateStatus(
+                id,
+                "RUNNING"
+            );
+
+        }
+
+    }
+
+    catch(error){
+
+        alert(
+            "Server connection failed"
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   UPDATE STATUS
+===================================== */
+
+function updateStatus(
+    id,
+    status
+){
+
+    const box =
+        document.getElementById(
+            "status-" + id
+        );
+
+
+    const live =
+        document.getElementById(
+            "live-" + id
+        );
+
+
+    const bot =
+        bots.find(
+            x =>
+                x.id === id
+        );
+
+
+    if(bot){
+
+        bot.status =
+            status;
+
+    }
+
+
+    if(box){
+
+        box.textContent =
+            status;
+
+
+        box.classList.remove(
+            "running",
+            "crashed"
+        );
+
+
+        if(
+            status === "RUNNING"
+        ){
+
+            box.classList.add(
+                "running"
+            );
+
+        }
+
+
+        if(
+            status === "CRASHED"
+        ){
+
+            box.classList.add(
+                "crashed"
+            );
+
+        }
+
+    }
+
+
+    if(live){
+
+        live.classList.remove(
+            "active"
+        );
+
+
+        if(
+            status === "RUNNING"
+        ){
+
+            live.textContent =
+                "● LIVE";
+
+            live.classList.add(
+                "active"
+            );
+
+        }
+        else{
+
+            live.textContent =
+                "● " + status;
+
+        }
+
+    }
+
+
+    updateBotStats();
+
+}
+
+
+/* =====================================
+   DELETE
+===================================== */
+
+async function deleteBot(id){
+
+    if(
+        !confirm(
+            "🗑️ Delete this bot permanently?"
+        )
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/bot/" + id,
+                {
+                    method:"DELETE"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!data.ok){
+
+            alert(
+                data.error ||
+                "Delete failed"
+            );
+
+            return;
+
+        }
+
+
+        location.reload();
+
+    }
+
+    catch(error){
+
+        alert(
+            "Server connection failed"
+        );
+
+    }
+
+}
+
+
+/* =====================================
+   UPLOAD
+===================================== */
+
+document
+    .getElementById(
+        "uploadForm"
+    )
+    .addEventListener(
+        "submit",
+        async function(event){
+
+            event.preventDefault();
+
+
+            const formData =
+                new FormData(
+                    this
+                );
+
+
+            try{
+
+                const response =
+                    await fetch(
+                        "/upload",
+                        {
+                            method:"POST",
+                            body:formData
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if(!data.ok){
+
+                    alert(
+                        data.error ||
+                        "Upload failed"
+                    );
+
+                    return;
+
+                }
+
+
+                location.reload();
+
+            }
+
+            catch(error){
+
+                alert(
+                    "Server connection failed"
+                );
+
+            }
+
+        }
+    );
+
+
+/* =====================================
+   SOCKET CONNECT
+===================================== */
+
+socket.on(
+    "connect",
+    function(){
+
+        console.log(
+            "✅ Live console connected"
+        );
+
+
+        bots.forEach(
+            bot => {
+
+                socket.emit(
+                    "join",
+                    {
+                        bot_id:
+                            bot.id
+                    }
+                );
+
+            }
+        );
+
+    }
+);
+
+
+/* =====================================
+   LIVE LOG
+===================================== */
+
+socket.on(
+    "log",
+    function(data){
+
+        const box =
+            document.getElementById(
+                "console-" +
+                data.bot_id
+            );
+
+
+        const live =
+            document.getElementById(
+                "live-" +
+                data.bot_id
+            );
+
+
+        if(!box){
+            return;
+        }
+
+
+        if(
+            box.textContent ===
+            "Console ready..."
+        ){
+
+            box.textContent =
+                "";
+
+        }
+
+
+        box.textContent +=
+            (
+                box.textContent
+                ? "\n"
+                : ""
+            )
+            +
+            data.line;
+
+
+        box.scrollTop =
+            box.scrollHeight;
+
+
+        if(live){
+
+            live.textContent =
+                "● LIVE";
+
+            live.classList.add(
+                "active"
+            );
+
+        }
+
+    }
+);
+
+
+/* =====================================
+   SOCKET STATUS
+===================================== */
+
+socket.on(
+    "status",
+    function(data){
+
+        updateStatus(
+            data.bot_id,
+            data.status
+        );
+
+    }
+);
+
+
+/* =====================================
+   INITIAL START
+===================================== */
+
+renderBots();
+
+updateBotStats();
+
+</script>
+
+</body>
+
+</html>
