@@ -5,7 +5,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>MULTI BOT HOSTING - ULTRA SMOOTH PANEL</title>
+<title>MULTI BOT HOST</title>
 
 <!-- Fonts & Socket.IO -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -315,15 +315,6 @@ button:focus-visible {
     border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-.file-label{
-    display: block;
-    margin-bottom: 6px;
-    color: var(--text-muted);
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-}
-
 .file-select-group{
     display: flex;
     gap: 8px;
@@ -344,7 +335,7 @@ select{
     font-family: 'JetBrains Mono', monospace;
 }
 
-/* BLUE EDIT BUTTON STYLING (EXCHANGED) */
+/* BLUE EDIT BUTTON STYLING */
 .edit-btn-trigger{
     padding: 10px 14px;
     background: #3b82f6;
@@ -359,7 +350,7 @@ select{
 
 
 /* =====================================
-   ACTION BUTTONS (SINGLE LINE SERIAL)
+   ACTION BUTTONS (INCREASED HEIGHT)
 ===================================== */
 
 .actions{
@@ -373,7 +364,7 @@ select{
 .actions button{
     flex: 1;
     min-width: 0;
-    padding: 11px 4px;
+    padding: 15px 4px; /* Increased vertical height for desktop */
     border: 0;
     border-radius: 10px;
     color: #fff;
@@ -396,7 +387,7 @@ select{
 .stop{ background: #dc2626 !important; }
 .restart{ background: #d97706 !important; }
 
-/* DEEP PINK DELETE BUTTON STYLING (EXCHANGED) */
+/* DEEP PINK DELETE BUTTON STYLING */
 .delete{ background: #db2777 !important; }
 
 .btn-icon{
@@ -454,7 +445,7 @@ select{
 
 
 /* =====================================
-   MODAL EDITOR
+   MODAL EDITOR (NO SCROLL SHIFT)
 ===================================== */
 
 .modal-overlay{
@@ -462,14 +453,17 @@ select{
     position: fixed;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
     width: 100%;
     height: 100%;
     background: rgba(3, 7, 18, 0.85);
     backdrop-filter: blur(4px);
-    z-index: 999;
+    z-index: 9999;
     align-items: center;
     justify-content: center;
     padding: 16px;
+    overflow-y: auto;
 }
 
 .modal-overlay.active{ display: flex; }
@@ -481,6 +475,7 @@ select{
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 14px;
     padding: 16px;
+    margin: auto;
 }
 
 .modal-header{
@@ -576,7 +571,7 @@ select{
     }
     
     .actions button {
-        padding: 9px 2px;
+        padding: 13px 2px; /* Increased vertical height for mobile */
         font-size: 10px;
         gap: 2px;
     }
@@ -665,6 +660,7 @@ select{
 let bots = {{ bots|tojson }};
 let currentEditingBotId = null;
 let currentEditingFileName = null;
+let scrollYPosition = 0;
 
 const socket = io();
 
@@ -720,7 +716,6 @@ function renderBots(){
                 </span>
             </div>
 
-            <label class="file-label">Start Python File</label>
             <div class="file-select-group">
                 <select id="entry-${bot.id}"></select>
                 <button type="button" class="edit-btn-trigger" onclick="openEditorModal('${bot.id}')">📄 Edit File</button>
@@ -807,8 +802,12 @@ async function openEditorModal(botId){
     if(titleBox) titleBox.textContent = "Editing: " + currentEditingFileName;
     if(codeArea) codeArea.value = "Loading text content...";
     if(modal) {
+        // Lock body scroll tightly to prevent jump
+        scrollYPosition = window.scrollY;
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollYPosition}px`;
+        document.body.style.width = '100%';
         modal.classList.add("active");
-        document.body.style.overflow = "hidden";
     }
 
     try{
@@ -825,7 +824,11 @@ function closeEditorModal(){
     const modal = document.getElementById("editorModal");
     if(modal) {
         modal.classList.remove("active");
-        document.body.style.overflow = "auto";
+        // Restore scroll position
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, scrollYPosition);
     }
     currentEditingBotId = null;
     currentEditingFileName = null;
